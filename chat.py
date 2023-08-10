@@ -50,7 +50,6 @@ while True:
             if tag == intent["tag"]:
                 print(f"{bot_name}: {random.choice(intent['responses'])}")
     else:
-    # Your previous code to add the intent to intents.json
 
       import random
       import json
@@ -61,7 +60,6 @@ while True:
       tokenizer = AutoTokenizer.from_pretrained("deepset/roberta-base-squad2")
       model = AutoModelForQuestionAnswering.from_pretrained("deepset/roberta-base-squad2")
 
-      # Create the question answering pipeline
       nlp = pipeline("question-answering", model=model, tokenizer=tokenizer)
 
       # Define a function to read the context from a file
@@ -71,18 +69,15 @@ while True:
           context, content = text.split(":", maxsplit=1)
           return context.strip(), content.strip()
 
-      # Define a function to get the answer to a question based on a context
       def get_answer(context, question):
           result = nlp(question=question, context=context)
           answer = result["answer"] if result["score"] > 0.5 else "No answer found"
           return answer
 
-      # Specify the folder path where the files are located
       folder_path = "/content/files"
 
-      # Get the list of file names in the folder
       file_names = os.listdir(folder_path)
-      question = " ".join(sentence)  # Assuming 'sentence' contains the user's question
+      question = " ".join(sentence)  
 
       # Flag to track if an answer is found
       answer_found = False
@@ -90,7 +85,6 @@ while True:
           intents_data = json.load(file)
       intents = intents_data["intents"]  # Get the list of existing intents
 
-      # Check if the intent already exists in the intents list
       def intent_exists(intent):
           for existing_intent in intents:
               if existing_intent["tag"] == intent["tag"] and intent["patterns"][0] in existing_intent["patterns"]:
@@ -104,7 +98,6 @@ while True:
               context, content = read_context(file_path)
               result = nlp(question=question, context=content)
 
-              # Check if an answer was found
               if result["score"] > 0.5:
                   answer_found = True
                   res=result["score"]
@@ -120,7 +113,6 @@ while True:
 
       intents_data["intents"] = intents  # Update the intents data
 
-      # Write the updated intents back to the JSON file
       with open("/content/intents.json", "w") as file:
           json.dump(intents_data, file, indent=4)
 
